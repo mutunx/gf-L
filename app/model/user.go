@@ -11,4 +11,8 @@ import (
 // User is the golang structure for table user.
 type User internal.User
 
-// Fill with you ideas below.
+// Api用户登录
+type UserApiLoginReq struct {
+	Passport string `v:"required#请输入账号"` // 账号
+	Password string `v:"required#请输入密码"` // 密码(明文)
+}
