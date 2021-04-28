@@ -15,7 +15,7 @@ type userApi struct {
 // 登录 登录成功后调转之前地址(如果存在
 func (userApi) Login(r *ghttp.Request) {
 	var loginReq *model.UserApiLoginReq
-	if err := r.Parse(loginReq); err != nil {
+	if err := r.Parse(&loginReq); err != nil {
 		library.JsonExit(r, 1, err.Error(), nil)
 	}
 	if err := service.User.Login(r.Context(), loginReq); err != nil {
@@ -34,6 +34,7 @@ func (userApi) Logout(r *ghttp.Request) {
 	if err := service.User.Logout(r.Context()); err != nil {
 		library.JsonExit(r, 500, err.Error(), nil)
 	} else {
-		r.Response.RedirectTo(service.Middleware.GetLoginUrl())
+		// 跳转登录页面而不是接口
+		//r.Response.RedirectTo(service.Middleware.GetLoginUrl())
 	}
 }
