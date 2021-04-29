@@ -9,7 +9,7 @@ import (
 
 func init() {
 	s := g.Server()
-	s.Group("/ping", func(group *ghttp.RouterGroup) {
+	s.Group("/hello", func(group *ghttp.RouterGroup) {
 		group.ALL("/", api.Hello)
 	})
 	s.Group("/", func(group *ghttp.RouterGroup) {

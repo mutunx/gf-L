@@ -1,1 +1,18 @@
-hello
+<div id="hello" >
+
+    <h1>hello you</h1>
+    <button v-on:click="logout" > 登出</button>
+</div>
+<script>
+    var hello = new Vue({
+        el:"#hello",
+        data:{
+
+        },
+        methods:{
+            logout:function () {
+                window.location.href = "/logout"
+            }
+        }
+    })
+</script>

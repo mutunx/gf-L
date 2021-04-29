@@ -1,34 +1,34 @@
-<section class="user">
+<div id="user" class="user">
     <div class="user_options-container">
         <div class="user_options-text">
             <div class="user_options-unregistered">
                 <h2 class="user_unregistered-title">没有账号？</h2>
                 <p class="user_unregistered-text">点击按钮注册成为会员.</p>
-                <button class="user_unregistered-signup" id="signup-button">注册</button>
+                <button class="user_unregistered-signup" v-on:click="shiftView">注册</button>
             </div>
 
             <div class="user_options-registered">
                 <h2 class="user_registered-title">已有账号?</h2>
                 <p class="user_registered-text">点击按钮会员登录.</p>
-                <button class="user_registered-login" id="login-button">登录</button>
+                <button class="user_registered-login" v-on:click="shiftView">登录</button>
             </div>
         </div>
 
-        <div class="user_options-forms" id="user_options-forms">
+        <div class="user_options-forms" v-bind:class="{bounceRight:isBounceRight,bounceLeft:isBounceLeft}" id="user_options-forms">
             <div class="user_forms-login">
                 <h2 class="forms_title">登录</h2>
-                <form class="forms_form" action="/do-login">
+                <form class="forms_form" >
                     <fieldset class="forms_fieldset">
                         <div class="forms_field">
-                            <input type="text" placeholder="邮箱" class="forms_field-input" required autofocus />
+                            <input type="text"  v-model="passport" placeholder="账号" class="forms_field-input" required autofocus />
                         </div>
                         <div class="forms_field">
-                            <input type="password" placeholder="密码" class="forms_field-input" required />
+                            <input type="password" v-model="password" placeholder="密码" class="forms_field-input" required />
                         </div>
                     </fieldset>
                     <div class="forms_buttons">
                         <button type="button" class="forms_buttons-forgot">忘记密码?</button>
-                        <input type="submit" value="登录" class="forms_buttons-action">
+                        <input type="button" value="登录" v-on:click="login" class="forms_buttons-action">
                     </div>
                 </form>
             </div>
@@ -53,8 +53,44 @@
             </div>
         </div>
     </div>
-</section>
-<script src="js/script.js"></script>
+</div >
+<script >
+    var app = new Vue({
+       el:"#user",
+        data: {
+           message:"hello",
+            isBounceRight:true,
+            isBounceLeft:false,
+            passport:"",
+            password:"",
+        },
+        methods: {
+           shiftView: function () {
+               this.isBounceRight = !this.isBounceRight
+               this.isBounceLeft = !this.isBounceLeft
+           },
+            login: function () {
+                axios.post("/do-login",{
+                    passport: this.passport,
+                    password: this.password
+                }).then((response) => {
+                    if (response.status == 200) {
+                        if (response.data.code != 200 && response.data.code != 0) {
+                            alert(response.data.message)
+                        } else {
+                            window.location.href = "/hello";
+                        }
+                    } else {
+                        alert("内部错误")
+                    }
+                })
+            }
+
+        }
+    });
+
+
+</script>
 
 
 
