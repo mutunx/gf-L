@@ -70,7 +70,7 @@
                this.isBounceLeft = !this.isBounceLeft
            },
             login: function () {
-                axios.post("/do-login",{
+                axios.post("/login/do",{
                     passport: this.passport,
                     password: this.password
                 }).then((response) => {
