@@ -1,4 +1,5 @@
-<div id="user" class="user">
+<div id="user" class="user" xmlns:v-on="http://www.w3.org/1999/xhtml"
+     xmlns:v-slot="http://www.w3.org/1999/XSL/Transform" xmlns:v-bind="http://www.w3.org/1999/xhtml">
     <div class="user_options-container">
         <div class="user_options-text">
             <div class="user_options-unregistered">
@@ -14,16 +15,19 @@
             </div>
         </div>
 
-        <div class="user_options-forms" v-bind:class="{bounceRight:isBounceRight,bounceLeft:isBounceLeft}" id="user_options-forms">
+        <div class="user_options-forms" v-bind:class="{bounceRight:isBounceRight,bounceLeft:isBounceLeft}"
+             id="user_options-forms">
             <div class="user_forms-login">
                 <h2 class="forms_title">登录</h2>
-                <form class="forms_form" >
+                <form class="forms_form">
                     <fieldset class="forms_fieldset">
                         <div class="forms_field">
-                            <input type="text"  v-model="passport" placeholder="账号" class="forms_field-input" required autofocus />
+                            <input type="text" v-model="passport" placeholder="账号" class="forms_field-input" required
+                                   autofocus/>
                         </div>
                         <div class="forms_field">
-                            <input type="password" v-model="password" placeholder="密码" class="forms_field-input" required />
+                            <input type="password" v-model="password" placeholder="密码" class="forms_field-input"
+                                   required/>
                         </div>
                     </fieldset>
                     <div class="forms_buttons">
@@ -32,45 +36,195 @@
                     </div>
                 </form>
             </div>
+
             <div class="user_forms-signup">
+
                 <h2 class="forms_title">注册</h2>
-                <form class="forms_form">
+                <q-form
+                        @submit="onSubmit"
+                        @reset="onReset"
+                        class="q-gutter-md"
+                        ref="register"
+                >
                     <fieldset class="forms_fieldset">
                         <div class="forms_field">
-                            <input type="text" placeholder="名称" class="forms_field-input" required />
+                            <q-input v-model="passport" label="账号"/>
                         </div>
                         <div class="forms_field">
-                            <input type="email" placeholder="邮箱" class="forms_field-input" required />
+                            <q-input v-model="password" label="密码" />
                         </div>
                         <div class="forms_field">
-                            <input type="password" placeholder="密码" class="forms_field-input" required />
+                            <q-input v-model="nickname" label="用户名"/>
+                        </div>
+                        <div class="forms_field">
+                            <q-input v-model="idCard" label="身份证号码"/>
+                        </div>
+                        <div class="forms_field">
+                            <q-radio v-model="gender" val=1 label="男"/>
+                            <q-radio v-model="gender" val=2 label="女"/>
+                        </div>
+                        <div class="forms_field">
+                            <q-input label="请选择出生日期" v-model="birthday" mask="date" :rules="['date']">
+                                <template v-slot:append>
+                                    <q-icon name="event" class="cursor-pointer">
+                                        <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
+                                            <q-date v-model="birthday">
+                                                <div class="row items-center justify-end">
+                                                    <q-btn v-close-popup label="Close" color="primary" flat/>
+                                                </div>
+                                            </q-date>
+                                        </q-popup-proxy>
+                                    </q-icon>
+                                </template>
+                            </q-input>
+                        </div>
+                        <div class=" q-gutter-md row items-start">
+                            <div>
+                                <q-select
+                                        v-model="province"
+                                        :options="options"
+                                        label="省"
+                                        style="width: 180px"
+                                />
+                            </div>
+                            <div>
+                                <q-select
+                                        v-model="city"
+                                        :options="options"
+                                        label="市"
+                                        style="width: 180px"
+                                />
+                            </div>
+                            <div>
+                                <q-select
+                                        v-model="area"
+                                        :options="options"
+                                        label="地区"
+                                        style="width: 180px"
+                                />
+                            </div>
+                        </div>
+                        <br>
+                        <div class="forms_field">
+                            <q-file bottom-slots v-model="avatar" label="选择头像" counter max-files="12">
+                                <template v-slot:before>
+                                    <q-avatar>
+                                        <img src="https://cdn.quasar.dev/img/avatar5.jpg">
+                                    </q-avatar>
+                                </template>
+
+                                <template v-slot:append>
+                                    <q-icon v-if="avatar !== null" name="close" @click.stop="avatar = null"
+                                            class="cursor-pointer"/>
+                                    <q-icon name="create_new_folder" @click.stop/>
+                                </template>
+
+                                <template v-slot:hint>
+                                    上传图片格式头像
+                                </template>
+
+                            </q-file>
                         </div>
                     </fieldset>
                     <div class="forms_buttons">
-                        <input type="submit" value="注册" class="forms_buttons-action">
+                        <q-btn label="注册" type="submit" color="primary"/>
                     </div>
-                </form>
+                </q-form>
             </div>
         </div>
     </div>
-</div >
-<script >
+</div>
+${include "/quasar.html" .}
+<script>
     var app = new Vue({
-       el:"#user",
+        el: "#user",
         data: {
-           message:"hello",
-            isBounceRight:true,
-            isBounceLeft:false,
-            passport:"",
-            password:"",
+            thumbStyle: {
+                right: '4px',
+                borderRadius: '5px',
+                backgroundColor: '#027be3',
+                width: '5px',
+                opacity: 0.75
+            },
+
+            barStyle: {
+                right: '2px',
+                borderRadius: '9px',
+                backgroundColor: '#027be3',
+                width: '9px',
+                opacity: 0.2
+            },
+            avatar:"",
+            message: "hello",
+            isBounceRight: true,
+            isBounceLeft: false,
+            passport: "",
+            password: "",
+            nickname: "",
+            idCard: "",
+            gender: 0,
+            birthday: "",
+            province:"",
+            city:"",
+            area:"",
+            fullAddress: "",
+            options: ['123', '223', '323'],
+            model: "",
         },
         methods: {
-           shiftView: function () {
-               this.isBounceRight = !this.isBounceRight
-               this.isBounceLeft = !this.isBounceLeft
-           },
+            shiftView: function () {
+                this.isBounceRight = !this.isBounceRight
+                this.isBounceLeft = !this.isBounceLeft
+            },
+            filterFn: function (val, update) {
+                if (val === '') {
+                    update(() => {
+                        this.options = stringOptions
+                    })
+                    return
+                }
+                update(() => {
+                    const needle = val.toLowerCase()
+                    this.options = stringOptions.filter(v => v.toLowerCase().indexOf(needle) > -1)
+                })
+            },
+            onSubmit () {
+                this.$refs.register.validate().then(success => {
+                    if (success) {
+                        axios.post("/register", {
+                            passport: this.passport,
+                            password: this.password,
+                            nickname:this.nickname,
+                            idCard:this.idCard,
+                            gender:this.gender,
+                            birthday:this.birthday,
+                            province:this.province,
+                            city:this.city,
+                            avatar:this.avatar,
+                            area:this.area,
+                        }).then((response) => {
+                            this.$q.notify({
+                                color: 'green-4',
+                                textColor: 'white',
+                                icon: 'cloud_done',
+                                message: response.data.message
+                            })
+                        })
+                    }
+                    else {
+                        // oh no, user has filled in
+                        // at least one invalid value
+                    }
+                })
+            },
+
+            onReset () {
+                this.name = null
+                this.age = null
+                this.accept = false
+            },
             login: function () {
-                axios.post("/login/do",{
+                axios.post("/login/do", {
                     passport: this.passport,
                     password: this.password
                 }).then((response) => {

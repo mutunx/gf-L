@@ -51,3 +51,21 @@ func (userService) getUserByPassportAndPassword(passport, password string) (*mod
 func (userService) Logout(ctx context.Context) error {
 	return Session.RemoveUser(ctx)
 }
+
+// 注册
+func (u userService) Register(ctx context.Context, user *model.User) error {
+	return u.insertUser(user)
+}
+
+func (userService) insertUser(user *model.User) error {
+	r, err := dao.User.Data(user).Insert()
+	if err == nil {
+		affected, err := r.RowsAffected()
+		if err == nil {
+			if affected == 0 {
+				err = gerror.New("无数据插入数据库")
+			}
+		}
+	}
+	return err
+}

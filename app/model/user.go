@@ -16,3 +16,16 @@ type UserApiLoginReq struct {
 	Passport string `v:"required#请输入账号"` // 账号
 	Password string `v:"required#请输入密码"` // 密码(明文)
 }
+
+type UserApiRegister struct {
+	Passport string `v:"required#请输入账号"` // 账号
+	Password string `v:"required#请输入密码"` // 密码(明文)
+	Nickname string `v:"required#用户名"`
+	Avatar   string
+	IdCard   string
+	Birthday string `v:"required#请生日"`
+	Gender   int
+	Province string `v:"required#请输入省"`
+	City     string `v:"required#请输入市"`
+	Area     string `v:"required#请输入地区"`
+}

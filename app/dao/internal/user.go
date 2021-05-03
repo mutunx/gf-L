@@ -35,6 +35,12 @@ type userColumns struct {
 	Gender    string // 性别 0: 未设置 1: 男 2: 女
 	CreatedAt string // 注册时间
 	UpdatedAt string // 更新时间
+	IdCard    string // 身份证号码
+	Birthday  string // 生日
+	Address   string // 具体地址
+	Province  string // 省
+	City      string // 市
+	Area      string // 地区
 }
 
 var (
@@ -53,6 +59,12 @@ var (
 			Gender:    "gender",
 			CreatedAt: "created_at",
 			UpdatedAt: "updated_at",
+			IdCard:    "id_card",
+			Birthday:  "birthday",
+			Address:   "address",
+			Province:  "province",
+			City:      "city",
+			Area:      "area",
 		},
 	}
 )

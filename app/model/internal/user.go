@@ -19,4 +19,10 @@ type User struct {
 	Gender    int         `orm:"gender"          json:"gender"`    // 性别 0: 未设置 1: 男 2: 女
 	CreatedAt *gtime.Time `orm:"created_at"      json:"createdAt"` // 注册时间
 	UpdatedAt *gtime.Time `orm:"updated_at"      json:"updatedAt"` // 更新时间
+	IdCard    string      `orm:"id_card"         json:"idCard"`    // 身份证号码
+	Birthday  string      `orm:"birthday"        json:"birthday"`  // 生日
+	Address   string      `orm:"address"         json:"address"`   // 具体地址
+	Province  string      `orm:"province"        json:"province"`  // 省
+	City      string      `orm:"city"            json:"city"`      // 市
+	Area      string      `orm:"area"            json:"area"`      // 地区
 }

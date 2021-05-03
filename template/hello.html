@@ -1,9 +1,10 @@
-<div id="hello" >
+<div id="hello" xmlns:v-on="http://www.w3.org/1999/xhtml">
 
     <h1>hello you</h1>
     <button v-on:click="logout" > 登出</button>
 </div>
 <script>
+    Quasar.lang.set(Quasar.lang.zhHans)
     var hello = new Vue({
         el:"#hello",
         data:{

@@ -202,6 +202,9 @@ input::placeholder {
     transform: translate3d(100%, -50%, 0);
     transition: transform 0.4s ease-in-out;
 }
+.user_options-forms.bounceLeft {
+    min-height: 850px;
+}
 .user_options-forms .user_forms-login {
     transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
 }
@@ -318,7 +321,7 @@ input::placeholder {
     .user_options-forms .user_forms-login .forms_buttons-action {
         margin-top: 30px;
     }
-    .user_options-forms .user_forms-signup,
+    .user_options-forms .user_forms-signup
     .user_options-forms .user_forms-login {
         top: 40px;
     }
