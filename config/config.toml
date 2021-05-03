@@ -15,7 +15,7 @@
 [viewer]
     Path        = "template"
     DefaultFile = "index.html"
-    Delimiters  =  ["${", "}"]
+    Delimiters  =  ["!{", "}"]
 
 # Database.
 [database]
@@ -30,4 +30,4 @@
 [gfcli]
     [[gfcli.gen.dao]]
         link   = "mysql:root:1234@tcp(127.0.0.1:3306)/l"
-        tables = "user"
+        tables = "user,province_city_code"

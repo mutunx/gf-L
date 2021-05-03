@@ -60,8 +60,8 @@
                             <q-input v-model="idCard" label="身份证号码"/>
                         </div>
                         <div class="forms_field">
-                            <q-radio v-model="gender" val=1 label="男"/>
-                            <q-radio v-model="gender" val=2 label="女"/>
+                            <q-radio v-model="gender" val="1" label="男"/>
+                            <q-radio v-model="gender" val="2" label="女"/>
                         </div>
                         <div class="forms_field">
                             <q-input label="请选择出生日期" v-model="birthday" mask="date" :rules="['date']">
@@ -134,7 +134,7 @@
         </div>
     </div>
 </div>
-${include "/quasar.html" .}
+!{include "/quasar.html" .}
 <script>
     var app = new Vue({
         el: "#user",
@@ -168,8 +168,42 @@ ${include "/quasar.html" .}
             city:"",
             area:"",
             fullAddress: "",
-            options: ['123', '223', '323'],
+            options: ["33", "03", "02"],
             model: "",
+        },
+        watch:{
+          idCard:function (newIdCard) {
+              // 六位数字地址码，八位数字出生日期码，三位数字顺序码和一位数字校验码。
+                console.log(this.gender)
+              let that = this
+              switch (newIdCard.length) {
+                  case 18:
+                  case 17:
+                      genderFlag = newIdCard.slice(16,17);
+                      this.gender = (genderFlag % 2 === 0) ? "2":"1";
+                      break;
+                  case 14:
+                      this.birthday = newIdCard.slice(6,14);
+                      break;
+                  case 6:
+                      axios.post("/idCard/get-full-name-by6-code",{code:newIdCard})
+                          .then(function (response) {
+                              console.log(response.data);
+                              let data = response.data.data[0];
+                              that.province = data.provinceName;
+                              that.city = data.cityName;
+                              that.area = data.areaName;
+                          });
+                      break;
+                  case 5:
+                  case 4:
+                  case 3:
+                  case 2:
+                  case 1:
+                  case 0:
+
+              }
+          }
         },
         methods: {
             shiftView: function () {

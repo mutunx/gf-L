@@ -16,5 +16,6 @@ func init() {
 		group.Middleware(service.Middleware.Ctx)
 		group.ALL("/login", api.Login)
 		group.ALL("/", api.User)
+		group.ALL("/idCard", api.IdCard)
 	})
 }
