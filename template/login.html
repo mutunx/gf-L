@@ -174,17 +174,14 @@
         watch:{
           idCard:function (newIdCard) {
               // 六位数字地址码，八位数字出生日期码，三位数字顺序码和一位数字校验码。
-                console.log(this.gender)
               let that = this
               switch (newIdCard.length) {
                   case 18:
                   case 17:
                       genderFlag = newIdCard.slice(16,17);
                       this.gender = (genderFlag % 2 === 0) ? "2":"1";
-                      break;
                   case 14:
                       this.birthday = newIdCard.slice(6,14);
-                      break;
                   case 6:
                       axios.post("/idCard/get-full-name-by6-code",{code:newIdCard})
                           .then(function (response) {
@@ -194,7 +191,6 @@
                               that.city = data.cityName;
                               that.area = data.areaName;
                           });
-                      break;
                   case 5:
                   case 4:
                   case 3:

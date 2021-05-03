@@ -15,8 +15,11 @@ type idCardService struct {
 
 // 根据code长度获取不同的值 2位取省市 4位取市县 6取全称
 func (s idCardService) GetNameByCode(ctx context.Context, code string) (*model.ProvinceCityCode, error) {
-	if len(code)%2 != 0 || len(code) > 6 {
+	if len(code)%2 != 0 {
 		return nil, gerror.New("错误编码数")
+	}
+	if len(code) > 6 {
+		code = code[0:6]
 	}
 	var codeField string
 	var nameField string
