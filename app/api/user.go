@@ -49,3 +49,23 @@ func (userApi) Register(r *ghttp.Request) {
 		library.JsonExit(r, 0, "注册成功", nil)
 	}
 }
+
+// UploadAvatar godoc
+// @Summary 注册
+// @Description
+// @Accept  json
+// @Produce  json
+// @Success 200 object} library.JsonRes
+// @Failure 400,404 {object} library.JsonRes
+// @Failure 500 {object} library.JsonRes
+// @Router /Upload-avatar [post]
+func (userApi) UploadAvatar(r *ghttp.Request) {
+	sourcePath := "public/"
+	filePath := "image/tmp/"
+	files := r.GetUploadFiles("upload-file")
+	names, err := files.Save(sourcePath + filePath)
+	if err != nil {
+		library.JsonExit(r, 1, err.Error())
+	}
+	library.JsonExit(r, 0, "", filePath+names[0])
+}

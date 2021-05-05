@@ -106,10 +106,13 @@
                         </div>
                         <br>
                         <div class="forms_field">
-                            <q-file bottom-slots v-model="avatar" label="选择头像" counter max-files="12">
+                            <q-file bottom-slots v-model="avatar" name="upload-file" label="选择头像" counter max-files="12">
                                 <template v-slot:before>
                                     <q-avatar>
-                                        <img src="https://cdn.quasar.dev/img/avatar5.jpg">
+                                        <q-img
+                                                :src="avatarUrl"
+                                                spinner-color="white"
+                                        />
                                     </q-avatar>
                                 </template>
 
@@ -154,7 +157,7 @@
                 width: '9px',
                 opacity: 0.2
             },
-            avatar:"",
+            avatar:null,
             message: "hello",
             isBounceRight: true,
             isBounceLeft: false,
@@ -167,6 +170,7 @@
             province:"",
             city:"",
             area:"",
+            avatarUrl:"",
             fullAddress: "",
             options: ["33", "03", "02"],
             model: "",
@@ -199,25 +203,30 @@
                   case 0:
 
               }
-          }
+          },
+            avatar:function (file) {
+              if (file === null) {
+                  return
+              };
+              let formData = new FormData();
+                formData.append('upload-file', file);
+              var that = this
+                axios.post("/upload-avatar",formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }})
+                    .then((response) => {
+                        that.avatarUrl = response.data.data[0]
+
+                    })
+            }
         },
         methods: {
             shiftView: function () {
                 this.isBounceRight = !this.isBounceRight
                 this.isBounceLeft = !this.isBounceLeft
             },
-            filterFn: function (val, update) {
-                if (val === '') {
-                    update(() => {
-                        this.options = stringOptions
-                    })
-                    return
-                }
-                update(() => {
-                    const needle = val.toLowerCase()
-                    this.options = stringOptions.filter(v => v.toLowerCase().indexOf(needle) > -1)
-                })
-            },
+
             onSubmit () {
                 this.$refs.register.validate().then(success => {
                     if (success) {
