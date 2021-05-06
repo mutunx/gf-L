@@ -263,7 +263,7 @@
                 this.accept = false
             },
             login: function () {
-                axios.post("/login/do", {
+                axios.post("/login", {
                     passport: this.passport,
                     password: this.password
                 }).then((response) => {

@@ -14,7 +14,8 @@ func init() {
 	})
 	s.Group("/", func(group *ghttp.RouterGroup) {
 		group.Middleware(service.Middleware.Ctx)
-		group.ALL("/login", api.Login)
+		group.POST("/login", api.Login.Do)
+		group.GET("/login", api.Login.Index)
 		group.ALL("/", api.User)
 		group.ALL("/idCard", api.IdCard)
 	})
