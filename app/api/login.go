@@ -1,10 +1,16 @@
 package api
 
 import (
+	"crypto/md5"
+	"fmt"
 	"gf-L/app/model"
 	"gf-L/app/service"
 	"gf-L/library"
+	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
+	"io"
+	"strconv"
+	"time"
 )
 
 var Login = loginApi{}
@@ -22,7 +28,7 @@ type loginApi struct {
 // @Success 200 object} library.JsonRes{Code:0}
 // @Failure 400,404 {object} library.JsonRes{Code:1}
 // @Failure 500 {object} library.JsonRes{Code:1}
-// @Router /login/do [post]
+// @Router /login [post]
 func (loginApi) Do(r *ghttp.Request) {
 	var loginReq *model.UserApiLoginReq
 	if err := r.Parse(&loginReq); err != nil {
@@ -47,9 +53,16 @@ func (loginApi) Do(r *ghttp.Request) {
 // @Success 200 object} library.JsonRes
 // @Failure 400,404 {object} library.JsonRes
 // @Failure 500 {object} library.JsonRes
-// @Router /login [post]
+// @Router /login [get]
 func (loginApi) Index(r *ghttp.Request) {
+	// 生成唯一token 加入缓存
+	crutime := time.Now().Unix()
+	h := md5.New()
+	io.WriteString(h, strconv.FormatInt(crutime, 10))
+	token := fmt.Sprintf("%x", h.Sum(nil))
+	service.Context.SetData(r.Context(), g.Map{"token": token})
 	service.View.Render(r, model.View{
 		Title: "主页",
+		Token: token,
 	})
 }

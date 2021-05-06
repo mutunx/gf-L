@@ -10,6 +10,7 @@ type View struct {
 	ContentType string           // 内容模型
 	BreadCrumb  []ViewBreadCrumb // 面包屑
 	Data        interface{}      // 页面参数
+	Token       string           // 页面参数
 }
 
 // 视图面包屑结构

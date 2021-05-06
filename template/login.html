@@ -128,6 +128,7 @@
 
                             </q-file>
                         </div>
+                        <input type="hidden" name="token" v-model="token">
                     </fieldset>
                     <div class="forms_buttons">
                         <q-btn label="注册" type="submit" color="primary"/>
@@ -174,6 +175,7 @@
             fullAddress: "",
             options: ["33", "03", "02"],
             model: "",
+            token: "!{.Token}",
         },
         watch:{
           idCard:function (newIdCard) {
@@ -208,17 +210,13 @@
               if (file === null) {
                   return
               };
-              let formData = new FormData();
-                formData.append('upload-file', file);
               var that = this
-                axios.post("/upload-avatar",formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }})
-                    .then((response) => {
-                        that.avatarUrl = response.data.data[0]
-
-                    })
+                // 预览图片
+                let reader = new FileReader()
+                reader.readAsDataURL(file.slice())
+                reader.onload = function(e) {
+                    that.avatarUrl = this.result
+                }
             }
         },
         methods: {
@@ -230,18 +228,23 @@
             onSubmit () {
                 this.$refs.register.validate().then(success => {
                     if (success) {
-                        axios.post("/register", {
-                            passport: this.passport,
-                            password: this.password,
-                            nickname:this.nickname,
-                            idCard:this.idCard,
-                            gender:this.gender,
-                            birthday:this.birthday,
-                            province:this.province,
-                            city:this.city,
-                            avatar:this.avatar,
-                            area:this.area,
-                        }).then((response) => {
+                        let formData = new FormData();
+                        formData.append('upload-file', this.avatar);
+                        formData.append("token",this.token)
+                        formData.append("passport", this.passport)
+                        formData.append("password", this.password)
+                        formData.append("nickname",this.nickname)
+                        formData.append("idCard",this.idCard)
+                        formData.append("gender",this.gender)
+                        formData.append("birthday",this.birthday)
+                        formData.append("province",this.province)
+                        formData.append("city",this.city)
+                        formData.append("avatar",this.avatar)
+                        formData.append("area",this.area)
+                        axios.post("/register",formData,{
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }}).then((response) => {
                             this.$q.notify({
                                 color: 'green-4',
                                 textColor: 'white',
@@ -249,6 +252,8 @@
                                 message: response.data.message
                             })
                         })
+
+
                     }
                     else {
                         // oh no, user has filled in
