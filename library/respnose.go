@@ -30,7 +30,7 @@ func Json(r *ghttp.Request, code int, message string, data ...interface{}) {
 
 // 返回标准json数据并退出当前http执行函数
 func JsonExit(r *ghttp.Request, code int, message string, data ...interface{}) {
-	Json(r, code, message, data)
+	Json(r, code, message, data...)
 	r.Exit()
 }
 
