@@ -129,6 +129,9 @@ func (a loginApi) Register(r *ghttp.Request) {
 func (loginApi) uploadAvatar(r *ghttp.Request, id string) error {
 
 	files := r.GetUploadFiles("upload-file")
+	if len(files) == 0 {
+		return nil
+	}
 	return service.Avatar.Upload(r.Context(), files, id)
 
 }
