@@ -36,7 +36,7 @@ func (s sessionStruct) GetUser(ctx context.Context) *model.User {
 		v := customCtx.Session.GetVar(sessionKeyUser)
 		if !v.IsNil() {
 			var user *model.User
-			_ = gconv.Struct(v, user)
+			_ = gconv.Struct(v.Val(), &user)
 			return user
 		}
 	}
