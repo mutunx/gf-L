@@ -2,6 +2,7 @@ package service
 
 import (
 	"gf-L/app/model"
+	"gf-L/library"
 	"github.com/gogf/gf/net/ghttp"
 	"github.com/gogf/gf/util/gconv"
 )
@@ -38,5 +39,14 @@ func (middlewareStruct) Ctx(r *ghttp.Request) {
 		}
 	}
 
+	r.Middleware.Next()
+}
+
+// 权限控制
+func (m middlewareStruct) Auth(r *ghttp.Request) {
+	user := Session.GetUser(r.Context())
+	if user == nil {
+		library.JsonRedirectExit(r, 1, "", "/login")
+	}
 	r.Middleware.Next()
 }

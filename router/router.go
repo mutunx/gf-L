@@ -17,6 +17,11 @@ func init() {
 		group.POST("/login", api.Login.Do)
 		group.GET("/login", api.Login.Index)
 		group.GET("/logout", api.Login.Logout)
+		group.POST("/register", api.Login.Register)
+	})
+	s.Group("/", func(group *ghttp.RouterGroup) {
+		group.Middleware(service.Middleware.Ctx)
+		group.Middleware(service.Middleware.Auth)
 		group.ALL("/", api.User)
 		group.ALL("/idCard", api.IdCard)
 	})
