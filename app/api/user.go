@@ -16,23 +16,6 @@ var User = userApi{}
 type userApi struct {
 }
 
-// Logout godoc
-// @Summary 登出
-// @Description
-// @Accept  json
-// @Produce  json
-// @Success 200 object} library.JsonRes
-// @Failure 400,404 {object} library.JsonRes
-// @Failure 500 {object} library.JsonRes
-// @Router /Logout [post]
-func (userApi) Logout(r *ghttp.Request) {
-	if err := service.User.Logout(r.Context()); err != nil {
-		library.JsonExit(r, 500, err.Error(), nil)
-	} else {
-		r.Response.RedirectTo(service.Middleware.GetLoginUrl())
-	}
-}
-
 // Register godoc
 // @Summary 注册
 // @Description
@@ -72,9 +55,30 @@ func (a userApi) Register(r *ghttp.Request) {
 
 }
 
+// 上传头像
 func (userApi) uploadAvatar(r *ghttp.Request, id string) error {
 
 	files := r.GetUploadFiles("upload-file")
 	return service.Avatar.Upload(r.Context(), files, id)
 
+}
+
+func (a userApi) GetUser(r *ghttp.Request) {
+
+	if data, err := service.User.GetUser(r.Context()); err != nil {
+		library.JsonExit(r, 500, err.Error())
+	} else {
+		library.JsonExit(r, 0, "", data)
+	}
+}
+func (a userApi) DelUser(r *ghttp.Request) {
+	ids := r.GetArray("ids")
+	if len(ids) == 0 {
+		library.JsonExit(r, 0, "删除成功")
+	}
+	if err := service.User.DeleteUsers(r.Context(), ids); err != nil {
+		library.JsonExit(r, 500, err.Error())
+	} else {
+		library.JsonExit(r, 0, "删除成功")
+	}
 }

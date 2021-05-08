@@ -1,19 +1,121 @@
-<div id="hello" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<div id="index" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
 
-    <h1>hello you</h1>
+    <div class="q-pa-md">
+        <q-table
+                title="Treats"
+                :data="data"
+                :columns="columns"
+                selection="multiple"
+                :selected.sync="selected"
+                :selected-rows-label="getSelectedString"
+                selection="multiple"
+                hide-header
+        >
+
+            <template v-slot:top>
+                <q-btn class="q-ml-sm" color="primary" :disable="loading" label="删除" @click="removeRow" />
+                <q-space />
+                <q-input borderless dense debounce="300" color="primary" v-model="filter">
+                    <template v-slot:append>
+                        <q-icon name="search" />
+                    </template>
+                </q-input>
+            </template>
+
+        </q-table>
+    </div>
+
+
+
     <button v-on:click="logout" > 登出</button>
 </div>
+!{include "/quasar.html" .}
 <script>
     Quasar.lang.set(Quasar.lang.zhHans)
     var hello = new Vue({
-        el:"#hello",
+        el:"#index",
         data:{
-
+            filter: '',
+            selected: [],
+            loading: false,
+            columns: [
+                { name: 'passport',label:'账号',field:'passport'},
+                { name: 'password',label:'MD5密码',field:'password'},
+                { name: 'nickname',label:'昵称',field:'nickname'},
+                { name: 'avatar',label:'头像地址',field:'avatar'},
+                { name: 'status',label:'状态',field:'status',format:val =>  (val === 0 )? "启用":"禁用"},
+                { name: 'gender',label:'性别',field:'gender',format:val => {
+                    let word = "未设置";
+                    word = (val === 1) ? "男":"女";
+                    return word;
+                }},
+                { name: 'createdAt',label:'注册时间',field:'createdAt'},
+                { name: 'updatedAt',label:'更新时间',field:'updatedAt'},
+                { name: 'idCard',label:'身份证号码',field:'idCard'},
+                { name: 'birthday',label:'生日',field:'birthday'},
+                { name: 'address',label:'具体地址',field:'address'},
+                { name: 'province',label:'省',field:'province'},
+                { name: 'city',label:'市',field:'city'},
+                { name: 'area',label:'地区',field:'area'},
+            ],
+            data: [],
+        },
+        watch: {
+          selected : function (s) {
+              console.log(s)
+          }
         },
         methods:{
             logout:function () {
                 window.location.href = "/logout"
+            },
+            getSelectedString:function () {
+                return this.selected.length === 0 ? '' : `${this.selected.length} record${this.selected.length > 1 ? 's' : ''} selected of ${this.data.length}`
+            },
+            removeRow:function() {
+                let that = this
+                this.loading = true
+                let ids = this.selected.map(v=>v.id)
+                axios.post("/del-user",{ids:ids}).then((response) => {
+                    if (response.status == 200) {
+
+                        this.$q.notify({
+                            color: 'green-4',
+                            textColor: 'white',
+                            icon: 'cloud_done',
+                            message: response.data.message
+                        })
+
+                    } else {
+
+                        alert("内部错误")
+                    }
+                    that.loading = false
+                    this.initForm()
+                })
+            },
+            initForm:function () {
+                let that = this
+                axios.get("/get-user",{}).then((response) => {
+                    if (response.status == 200) {
+                        if (response.data.code != 200 && response.data.code != 0) {
+                            alert(response.data.message)
+                        } else {
+                            that.data = response.data.data
+                        }
+                    } else {
+                        alert("内部错误")
+                    }
+                })
             }
+        },
+        created: function() {
+            this.initForm()
+
         }
     })
 </script>
+<style lang="sass">
+    .grid-style-transition
+    transition: transform .28s, background-color .28s
+</style>

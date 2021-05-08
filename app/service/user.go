@@ -58,6 +58,7 @@ func (u userService) Register(ctx context.Context, user *model.User) (string, er
 	return u.insertUser(user)
 }
 
+// 插入用户
 func (userService) insertUser(user *model.User) (string, error) {
 	r, err := dao.User.Data(user).Insert()
 	if err != nil {
@@ -75,4 +76,15 @@ func (userService) insertUser(user *model.User) (string, error) {
 		return "", err
 	}
 	return fmt.Sprint(id), err
+}
+
+// 读取用户
+func (userService) GetUser(ctx context.Context) ([]*model.User, error) {
+	return dao.User.All()
+}
+
+// 删除用户
+func (userService) DeleteUsers(ctx context.Context, userIds []string) error {
+	_, err := dao.User.Delete(dao.User.Columns.Id+" IN(?)", g.Slice{userIds})
+	return err
 }

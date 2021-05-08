@@ -16,6 +16,7 @@ func init() {
 		group.Middleware(service.Middleware.Ctx)
 		group.POST("/login", api.Login.Do)
 		group.GET("/login", api.Login.Index)
+		group.GET("/logout", api.Login.Logout)
 		group.ALL("/", api.User)
 		group.ALL("/idCard", api.IdCard)
 	})
