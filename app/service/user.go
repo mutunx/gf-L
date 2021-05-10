@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gf-L/app/dao"
 	"gf-L/app/model"
+	"github.com/gogf/gf/crypto/gmd5"
 	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/frame/g"
 )
@@ -18,7 +19,7 @@ type userService struct {
 func (u userService) Login(ctx context.Context, userEntity *model.UserApiLoginReq) error {
 	user, error := u.getUserByPassportAndPassword(
 		userEntity.Passport,
-		userEntity.Password,
+		encryptPassword(userEntity.Passport, userEntity.Password),
 	)
 	if error != nil {
 		return error
@@ -55,7 +56,12 @@ func (userService) Logout(ctx context.Context) error {
 
 // 注册
 func (u userService) Register(ctx context.Context, user *model.User) (string, error) {
+	user.Password = encryptPassword(user.Passport, user.Password)
 	return u.insertUser(user)
+}
+
+func encryptPassword(passport, password string) string {
+	return gmd5.MustEncrypt(passport + password)
 }
 
 // 插入用户

@@ -29,6 +29,7 @@
                             <input type="password" v-model="password" placeholder="密码" class="forms_field-input"
                                    required/>
                         </div>
+                        <input type="hidden" name="token" v-model="token">
                     </fieldset>
                     <div class="forms_buttons">
                         <button type="button" class="forms_buttons-forgot">忘记密码?</button>
@@ -232,7 +233,7 @@
                         formData.append('upload-file', this.avatar);
                         formData.append("token",this.token)
                         formData.append("passport", this.passport)
-                        formData.append("password", this.password)
+                        formData.append("password", hex_md5(this.passport + this.password))
                         formData.append("nickname",this.nickname)
                         formData.append("idCard",this.idCard)
                         formData.append("gender",this.gender)
@@ -270,7 +271,8 @@
             login: function () {
                 axios.post("/login", {
                     passport: this.passport,
-                    password: this.password
+                    password: hex_md5(this.passport + this.password),
+                    token:this.token
                 }).then((response) => {
                     if (response.status == 200) {
                         if (response.data.code != 200 && response.data.code != 0) {

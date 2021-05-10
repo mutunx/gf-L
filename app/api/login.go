@@ -1,17 +1,15 @@
 package api
 
 import (
-	"crypto/md5"
 	"fmt"
 	"gf-L/app/model"
 	"gf-L/app/service"
 	"gf-L/library"
+	"github.com/gogf/gf/crypto/gmd5"
 	"github.com/gogf/gf/errors/gerror"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/net/ghttp"
 	"github.com/gogf/gf/os/gcache"
-	"io"
-	"strconv"
 	"time"
 )
 
@@ -31,7 +29,11 @@ type loginApi struct {
 // @Failure 400,404 {object} library.JsonRes{Code:1}
 // @Failure 500 {object} library.JsonRes{Code:1}
 // @Router /login [post]
-func (loginApi) Do(r *ghttp.Request) {
+func (a loginApi) Do(r *ghttp.Request) {
+	token := r.GetString("token")
+	if err := a.validToken(token, "login"); err != nil {
+		library.JsonExit(r, 1, err.Error())
+	}
 	var loginReq *model.UserApiLoginReq
 	if err := r.Parse(&loginReq); err != nil {
 		library.JsonExit(r, 1, err.Error(), nil)
@@ -57,12 +59,13 @@ func (loginApi) Do(r *ghttp.Request) {
 // @Failure 500 {object} library.JsonRes
 // @Router /login [get]
 func (loginApi) Index(r *ghttp.Request) {
-	// 生成唯一token 加入缓存
-	crutime := time.Now().Unix()
-	h := md5.New()
-	io.WriteString(h, strconv.FormatInt(crutime, 10))
-	token := fmt.Sprintf("%x", h.Sum(nil))
-	service.Context.SetData(r.Context(), g.Map{"token": token})
+	// 生成唯一token 作为防止重复提交token 加入缓存
+	crutime := fmt.Sprint(time.Now().Unix())
+	token := gmd5.MustEncrypt(r.Session.Id() + crutime)
+	// 由于主页包含注册和登录俩个功能,所以在一个token下缓存俩个变种用于验证一个页面下的登录和注册
+	gcache.Set(gmd5.MustEncrypt("login"+token), true, 5*time.Minute)
+	gcache.Set(gmd5.MustEncrypt("register"+token), true, 5*time.Minute)
+
 	service.View.Render(r, model.View{
 		Title: "主页",
 		Token: token,
@@ -96,16 +99,10 @@ func (loginApi) Logout(r *ghttp.Request) {
 // @Failure 500 {object} library.JsonRes
 // @Router /Register [post]
 func (a loginApi) Register(r *ghttp.Request) {
-	// 重复登录校验
-	token := r.Get("token")
-	if b, err := gcache.Contains(token); err != nil {
-		library.JsonExit(r, 1, err.Error(), nil)
-	} else {
-		if b {
-			library.JsonExit(r, 1, gerror.New("重复提交").Error(), nil)
-		} else {
-			gcache.Set(token, true, 30*time.Minute)
-		}
+	// 重复校验
+	token := r.GetString("token")
+	if err := a.validToken(token, "register"); err != nil {
+		library.JsonExit(r, 1, err.Error())
 	}
 
 	var user *model.User
@@ -123,6 +120,28 @@ func (a loginApi) Register(r *ghttp.Request) {
 		}
 	}
 
+}
+
+func (a loginApi) validToken(tokens ...string) error {
+	if len(tokens) == 0 {
+		return gerror.New("没有参数")
+	}
+	token := tokens[0]
+	var keyword string
+	if len(tokens) > 1 {
+		keyword = tokens[1]
+	}
+	realToken := gmd5.MustEncrypt(keyword + token)
+	exist, err := gcache.Contains(realToken)
+	if err != nil {
+		return err
+	}
+	if exist {
+		gcache.Remove(realToken)
+	} else {
+		err = gerror.New("无效token请刷新重试")
+	}
+	return err
 }
 
 // 上传头像
