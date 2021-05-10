@@ -53,6 +53,6 @@ func (m middlewareStruct) Auth(r *ghttp.Request) {
 }
 
 func (m middlewareStruct) SessionManage(r *ghttp.Request) {
-	g.Log().Println("sessionID:" + r.Session.Id() + "过来看看")
+	g.Log().Println("sessionID:" + r.Session.Id() + "过来看了看")
 	r.Middleware.Next()
 }
