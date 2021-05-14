@@ -193,7 +193,7 @@
                       axios.post("/idCard/get-full-name-by6-code",{code:newIdCard})
                           .then(function (response) {
                               console.log(response.data);
-                              let data = response.data.data[0];
+                              let data = response.data.data;
                               that.province = data.provinceName;
                               that.city = data.cityName;
                               that.area = data.areaName;
