@@ -23,3 +23,18 @@ CREATE TABLE `user`  (
   UNIQUE INDEX `uni_user_passport`(`passport`) USING BTREE,
   UNIQUE INDEX `uni_user_nickname`(`nickname`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 18  COMMENT = '用户基础表' ROW_FORMAT = Dynamic;
+
+DROP TABLE IF EXISTS `l.province_city_code`;
+create table  l.province_city_code
+(
+    code          varchar(100) null comment '六位地区码',
+    name          varchar(10)  null comment '六位地区码含义',
+    province_code varchar(100) null comment '前两位省市码',
+    province_name varchar(10)  null comment '前两位省市码含义',
+    city_code     varchar(100) null comment '前四位市县码',
+    city_name     varchar(10)  null comment '前四位市县码含义',
+    area_code     varchar(100) null comment '前六位地区码',
+    area_name     varchar(10)  null comment '前六位地区码含义'
+)
+    comment '身份证前六位含义';
+
