@@ -1,39 +1,39 @@
 DROP DATABASE  IF EXISTS  L;
 CREATE DATABASE L;
 USE L;
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user`  (
-    id         int unsigned auto_increment comment 'UID'
-        primary key,
-    passport   varchar(45)          not null comment '账号',
-    password   char(32)             not null comment 'MD5密码',
-    nickname   varchar(45)          null comment '昵称',
-    avatar     varchar(200)         null comment '头像地址',
-    status     tinyint    default 1 null comment '状态 0:启用 1:禁用',
-    gender     tinyint(1) default 0 null comment '性别 0: 未设置 1: 男 2: 女',
-    created_at datetime             null comment '注册时间',
-    updated_at datetime             null comment '更新时间',
-    id_card    varchar(20)          null comment '身份证号码',
-    birthday   varchar(20)          null comment '生日',
-    address    varchar(50)          null comment '具体地址',
-    province   varchar(50)          null comment '省',
-    city       varchar(50)          null comment '市',
-    area       varchar(50)          null comment '地区',
-  UNIQUE INDEX `uni_user_passport`(`passport`) USING BTREE,
-  UNIQUE INDEX `uni_user_nickname`(`nickname`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 18  COMMENT = '用户基础表' ROW_FORMAT = Dynamic;
+DROP TABLE IF EXISTS `USER`;
+CREATE TABLE `USER`  (
+    ID         INT UNSIGNED AUTO_INCREMENT COMMENT 'UID'
+        PRIMARY KEY,
+    PASSPORT   VARCHAR(45)          NOT NULL COMMENT '账号',
+    PASSWORD   CHAR(32)             NOT NULL COMMENT 'MD5密码',
+    NICKNAME   VARCHAR(45)          NULL COMMENT '昵称',
+    AVATAR     VARCHAR(200)         NULL COMMENT '头像地址',
+    STATUS     TINYINT    DEFAULT 1 NULL COMMENT '状态 0:启用 1:禁用',
+    GENDER     TINYINT(1) DEFAULT 0 NULL COMMENT '性别 0: 未设置 1: 男 2: 女',
+    CREATED_AT DATETIME             NULL COMMENT '注册时间',
+    UPDATED_AT DATETIME             NULL COMMENT '更新时间',
+    ID_CARD    VARCHAR(20)          NULL COMMENT '身份证号码',
+    BIRTHDAY   VARCHAR(20)          NULL COMMENT '生日',
+    ADDRESS    VARCHAR(50)          NULL COMMENT '具体地址',
+    PROVINCE   VARCHAR(50)          NULL COMMENT '省',
+    CITY       VARCHAR(50)          NULL COMMENT '市',
+    AREA       VARCHAR(50)          NULL COMMENT '地区',
+  UNIQUE INDEX `UNI_USER_PASSPORT`(`PASSPORT`) USING BTREE,
+  UNIQUE INDEX `UNI_USER_NICKNAME`(`NICKNAME`) USING BTREE
+) ENGINE = INNODB AUTO_INCREMENT = 18  COMMENT = '用户基础表' ROW_FORMAT = DYNAMIC;
 
-DROP TABLE IF EXISTS `province_city_code`;
-create table  province_city_code
+DROP TABLE IF EXISTS `PROVINCE_CITY_CODE`;
+CREATE TABLE  PROVINCE_CITY_CODE
 (
-    code          varchar(100) null comment '六位地区码',
-    name          varchar(100)  null comment '六位地区码含义',
-    province_code varchar(100) null comment '前两位省市码',
-    province_name varchar(100)  null comment '前两位省市码含义',
-    city_code     varchar(100) null comment '前四位市县码',
-    city_name     varchar(100)  null comment '前四位市县码含义',
-    area_code     varchar(100) null comment '前六位地区码',
-    area_name     varchar(100)  null comment '前六位地区码含义'
+    CODE          VARCHAR(100) NULL COMMENT '六位地区码',
+    NAME          VARCHAR(100)  NULL COMMENT '六位地区码含义',
+    PROVINCE_CODE VARCHAR(100) NULL COMMENT '前两位省市码',
+    PROVINCE_NAME VARCHAR(100)  NULL COMMENT '前两位省市码含义',
+    CITY_CODE     VARCHAR(100) NULL COMMENT '前四位市县码',
+    CITY_NAME     VARCHAR(100)  NULL COMMENT '前四位市县码含义',
+    AREA_CODE     VARCHAR(100) NULL COMMENT '前六位地区码',
+    AREA_NAME     VARCHAR(100)  NULL COMMENT '前六位地区码含义'
 )
-    comment '身份证前六位含义';
+    COMMENT '身份证前六位含义';
 
