@@ -23,8 +23,8 @@ CREATE TABLE `user`  (
   UNIQUE INDEX `uni_user_nickname`(`nickname`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 18  COMMENT = '用户基础表' ROW_FORMAT = Dynamic;
 
-DROP TABLE IF EXISTS `l.province_city_code`;
-create table  l.province_city_code
+DROP TABLE IF EXISTS `province_city_code`;
+create table  province_city_code
 (
     code          varchar(100) null comment '六位地区码',
     name          varchar(10)  null comment '六位地区码含义',
