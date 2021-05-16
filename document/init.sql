@@ -19,7 +19,6 @@ CREATE TABLE `user`  (
     province   varchar(50)          null comment '省',
     city       varchar(50)          null comment '市',
     area       varchar(50)          null comment '地区',
-  PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `uni_user_passport`(`passport`) USING BTREE,
   UNIQUE INDEX `uni_user_nickname`(`nickname`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 18  COMMENT = '用户基础表' ROW_FORMAT = Dynamic;
